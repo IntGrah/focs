@@ -15,8 +15,7 @@ module Polynomial = struct
   module type P = sig
     include Grp
     type r
-    module Context : Map.S with type key = string
-    val eval : r Context.t -> t -> r
+    val eval : (string * r) list -> t -> r
     val make : t -> t
     val to_string : (r -> string) -> t -> string
   end
@@ -27,8 +26,9 @@ module Polynomial = struct
 
   module Over : Over = functor (R : CRing) -> struct
     type r = R.t
-    type term = R.t * (string * int) list
+    type term = r * (string * int) list
     type t = term list
+    type context = (string * r) list
   
     let rec add p p' =
       match p, p' with 
@@ -53,12 +53,10 @@ module Polynomial = struct
       | n ->
           let s = pow (R.mul b b) (n / 2) in
           if n mod 2 = 0 then s else R.mul b s
-          
-    module Context = Map.Make(String)
 
     let eval context p =
       let eval_term (c, x) = x
-        |> List.map (fun (v, n) -> pow (Context.find v context) n)
+        |> List.map (fun (v, n) -> pow (List.assoc v context) n)
         |> List.fold_left R.mul c
       in List.fold_left R.add R.zero @@ List.map eval_term p
 
@@ -101,6 +99,6 @@ let () = List.iter print_endline @@ List.map (IntPoly.to_string string_of_int) [
 
 let () = print_endline @@ string_of_bool (p2 = p3)
 
-let ctx = IntPoly.Context.(empty |> add "x" 4 |> add "y" 3)
+let ctx = [("x", 4); ("y", 3)]
  
 let () = print_int @@ IntPoly.eval ctx res
