@@ -14,14 +14,14 @@ let rec sum = function
  *)
 let rec merge l l' =
   match l, l' with
-  | [],     _        -> l'
-  | _,      []       -> l
+  | [],     w
+  | w,      []       -> w
   | h :: t, h' :: t' ->
       if h < h' then h :: merge t l'
       else h' :: merge l t'
 
 let rec split = function
-  | []              -> [],  []
+  | []              -> [] , []
   | [x]             -> [x], []
   | h :: h' :: rest ->
       let t, t' = split rest in
@@ -36,9 +36,7 @@ let rec merge_sort = function
 
 
 (* O(n^2): Each element gets multiplied with every element, so it is quadratic. *)
-let mult_table l = l
-  |> List.map (fun e -> List.map (( * ) e) l)
-  |> List.concat
+let mult_table l = List.concat_map (fun e -> List.map (( * ) e) l) l
 
 
 (* O(2^n). The function calls itself twice, so it is exponential. *)
