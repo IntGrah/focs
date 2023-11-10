@@ -41,17 +41,12 @@ let identify_exn = function
 
 
 (* Pros: forces developer to handle exceptional cases, thus reducing bugs.
- * Cons: results have to be matched and unwrapped. *)
+ * Cons: results have to be matched and unwrapped. Undescriptive *)
 let identify_opt = function
   | "Oak"   -> Some Oak
   | "Birch" -> Some Birch
   | "Maple" -> Some Maple
   | name    -> None
-
-type stree =
-  | Oak
-  | Birch
-  | Maple
 
 
 (* val spotter : unit -> stree *)
@@ -68,7 +63,7 @@ let spotter =
  * Takes a sequence and a state.
  * Returns the next element and the next state *)
 let rec spotter seq = function
-  | [] -> spotter seq seq
+  | []     -> spotter seq seq
   | h :: t -> h, t
 
 let seq = [Oak; Birch; Oak; Maple; Maple]

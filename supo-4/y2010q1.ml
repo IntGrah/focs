@@ -46,7 +46,7 @@ let rec iterates2 f g x y =
  * v gy
  *
  * Both fx and gy are applied to the head. *)
-let iterates22 f g x y =
+let iterates2 f g x y =
   let fx (x, y) = (f x,   y) in (* Applies f to the first element of a pair *)
   let gy (x, y) = (  x, g y) in (* Applies g to the second element of a pair *)
 
