@@ -55,8 +55,7 @@ let rec next_binary_word = function
 let binary_words =
   let rec words_from d =
     Stream.Cons (List.rev d, fun () -> words_from (next_binary_word d))
-  in
-  words_from []
+  in words_from []
 
 
 let binary_palindromes =
@@ -73,8 +72,7 @@ let binary_palindromes =
         )
       )
     )
-  in
-  palindromes_from []
+  in palindromes_from []
 
 
 (* Tests *)
