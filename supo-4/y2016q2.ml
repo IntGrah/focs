@@ -49,6 +49,7 @@ let can_be_made chunks goal =
     in List.exists dfs children
   in dfs ""
 
+
 let () = "abracadabra"
   |> can_be_made ["ab"; "bra"; "abra"; "cad"]
   |> string_of_bool

@@ -17,8 +17,7 @@ let flatten nested_list =
     | Atom n        -> n :: acc
     | Nest []       -> acc
     | Nest (h :: t) -> flatten_aux (flatten_aux acc h) (Nest t)
-  in
-  List.rev (flatten_aux [] nested_list)
+  in List.rev (flatten_aux [] nested_list)
 
 
 let rec nested_map (f : int -> int) = function
@@ -34,8 +33,7 @@ let pack_as xs nested =
     | xs     , Nest (h :: t) ->
       let (xs', h') = pack_aux [] (xs, h) in
       pack_aux (h' :: acc) (xs', Nest t)
-  in
-  snd (pack_aux [] (xs, nested))
+  in snd (pack_aux [] (xs, nested))
 
 
 type nested_zlist =
