@@ -14,33 +14,30 @@ let line_indices = (* All possible indices of winning lines *)
    (0, 4, 8); (2, 4, 6)]            (* Diagonals *)
 
 
-let state board : state =
-  let check_line (i, j, k) : result =
-    let a, b, c = board.(i), board.(j), board.(k) in
-    if a = b && b = c then a else None
-  in
-
-  match List.filter_map check_line line_indices with
-  | h :: _ -> Finished (Some h) (* There exists a winning line *)
-  | []     -> (* No winning lines *)
-      if Array.for_all ((<>) None) board then (* Board is full *)
-        Finished None
-      else Ongoing
+let state b : state =
+  let check_line (i, j, k) : result = if b.(i) = b.(j) && b.(j) = b.(k) then b.(i) else None in
+  let res = List.find_map check_line line_indices in
+  if res <> None then (* There exists a winning line *)
+    Finished res
+  else if Array.mem None b then (* Board is not yet full*)
+    Ongoing
+  else (* Board is full *)
+    Finished None
 
 
-let rec tree board player : tree =
-  match state board with
-  | Finished res -> Lf (board, res)
+let rec tree p b : tree =
+  match state b with
+  | Finished res -> Lf (b, res)
   | Ongoing ->
-      let other_player = if player = O then X else O in
+      let opponent = if p = O then X else O in
       let children = [0; 1; 2; 3; 4; 5; 6; 7; 8]
-        |> List.filter (fun i -> board.(i) = None) (* You can only play in empty cells *)
-        |> List.map (fun i -> let b = Array.copy board in b.(i) <- Some player; b) (* Copy, edit, and return *)
-        |> List.map (fun board -> tree board other_player) (* Recursively compute game nodes *)
-      in Br (board, player, children)
+        |> List.filter (fun i -> b.(i) = None) (* You can only play in empty cells *)
+        |> List.map (fun i -> let b' = Array.copy b in b'.(i) <- Some p; b') (* Copy, edit, and return *)
+        |> List.map (tree opponent) (* Recursively compute game nodes *)
+      in Br (b, p, children)
 
 
-let mktree () = tree (Array.make 9 None) O
+let mktree () = tree O (Array.make 9 None)
 
 
 let winner_is_O : tree -> int =
