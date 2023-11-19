@@ -65,17 +65,17 @@ end
 module Church = struct
   type 'a t = ('a -> 'a) -> 'a -> 'a
 
-  let zero = Fun.id
+  let zero f x = x
 
-  let succ n = fun f x -> f (n f x)
+  let succ n f x = f (n f x)
 
-  let add a b = fun f x -> a f (b f x)
+  let add a b f x = a f (b f x)
 
   let to_int n = n Int.succ 0
 
-  let rec of_int = function
-    | 0 -> fun f -> zero
-    | n -> fun f x -> f (of_int (n - 1) f x)
+  let rec of_int n f x =
+    if n = 0 then x
+    else f (of_int (n - 1) f x)
 end
 
 
