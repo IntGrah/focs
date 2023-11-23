@@ -34,7 +34,7 @@ end)
 module MatrixArray = Matrix (Array)
 
 
-module FuncArray = struct
+module FuncArray : Collection = struct
   type 'a t =
     | Lf
     | Br of 'a * 'a t * 'a t
@@ -57,8 +57,3 @@ module FuncArray = struct
 end
 
 module MatrixFuncArray = Matrix (FuncArray)
-
-
-let m = MatrixList.create 3 [1.; 2.; 3.; 4.; 5.; 6.; 7.; 8.; 9.]
-let mm = MatrixArray.create 3 [1.; 2.; 3.; 4.; 5.; 6.; 7.; 8.; 9.]
-let mmm = MatrixFuncArray.create 3 [1.; 2.; 3.; 4.; 5.; 6.; 7.; 8.; 9.]
