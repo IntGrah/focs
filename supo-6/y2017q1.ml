@@ -7,20 +7,14 @@
  * because it uses DFS and will fall into an infinite loop. *)
 
 
-let winning = (=) 2 (* Only winning state is 2 *)
+let next = function
+ | 0 -> [1]
+ | 1 -> [2;4]
+ | 2 -> [3]
+ | 3 -> [1]
+ | _ -> []
 
-
-let next = function (* 0 -> 1 -> 0 -> 1 ... *)
-  | 0 -> [1;4;5]
-  | 1 -> [0;1]
-  | 2 -> []
-  | 3 -> [0;1;3;4;5;6;7;2]
-  | 4 -> [0;1;4;5]
-  | 5 -> [0;1;4;5;6]
-  | 6 -> [0;1;4;5;6;7]
-  | 7 -> [0;1;4;5;6;7;3]
-  | _ -> []
-
+let winning x = x = 4
 
 let rec winnable x = winning x || List.exists winnable (next x)
 
@@ -41,7 +35,6 @@ let winnable x =
           else
             filter (h :: seen) (h :: states') t
     in
-    print_endline @@ String.concat " " @@ List.map string_of_int states;
     if states = [] then false else
       List.exists winning states ||
       filter seen [] (List.concat_map next states)
